@@ -30,6 +30,11 @@ if(NOT pcre_FOUND)
   # Since this project uses a find_package() directive to include this
   # file, don't recurse back into the CMakeLists file.
   if(NOT ${PROJECT_NAME} STREQUAL pcre)
+    set(PCRE_STATIC ON)
+    set(PCRE_BUILD_PCRE8 ON)
+    set(PCRE_BUILD_PCRE16 ON)
+    set(PCRE_BUILD_PCRECPP OFF)
+    set(PCRE_SUPPORT_UTF ON)
     add_subdirectory(
       ${pcre_DIR}/pcre
       ${CMAKE_CURRENT_BINARY_DIR}/pcre
@@ -45,10 +50,9 @@ if(NOT pcre_FOUND)
 
   # Export library targets.
   set(pcre_libraries
-    pcre
+    pcre pcre16
     CACHE INTERNAL "PCRE library" FORCE
   )
-    #pcre16
 
   # Usual "required" et. al. directive logic.
   include(FindPackageHandleStandardArgs)
