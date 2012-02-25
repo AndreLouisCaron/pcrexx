@@ -33,8 +33,8 @@
  */
 
 #include <pcre.h>
+#include "traits.hpp"
 #include <map>
-#include <string>
 #include <vector>
 
 namespace pcrexx {
@@ -47,9 +47,16 @@ namespace pcrexx {
         Match ( const Match& );
         Match& operator= ( const Match& );
 
+        /* nested types. */
+    public:
+        typedef wchar_t char_type;
+        typedef /*typename*/ traits<char_type> traits_type;
+
+        typedef /*typename*/ traits_type::string string;
+
         /* data. */
     private:
-        std::string myText;
+        string myText;
         int myGroups;
         std::vector<int> myResults;
 
@@ -58,14 +65,14 @@ namespace pcrexx {
         /*!
          * @brief Match @a text using @a pattern.
          */
-        Match ( const Pattern& pattern, const std::string& text );
+        Match ( const Pattern& pattern, const string& text );
 
         /* methods. */
     public:
         /*!
          * @brief Subject text.
          */
-        const std::string& text () const;
+        const string& text () const;
 
         /*!
          * @brief Get the offset of the entire match.
@@ -90,17 +97,17 @@ namespace pcrexx {
         /*!
          * @brief Get the contents of the entire match.
          */
-        std::string group () const;
+        string group () const;
 
         /*!
          * @brief Get the contents of a specific group within the match.
          */
-        std::string group ( int i ) const;
+        string group ( int i ) const;
 
         /*!
          * @brief Get the contents of all captured groups, in order.
          */
-        std::vector<std::string> groups () const;
+        std::vector<string> groups () const;
 
         /*!
          * @brief Get the contents of all captured groups, by name.
@@ -108,8 +115,7 @@ namespace pcrexx {
          * @todo Keep an internal copy of the pattern to implement
          *  this without requiring the client to supply the pattern again.
          */
-        std::map<std::string,std::string>
-            named_groups ( const Pattern& pattern ) const;
+        std::map<string,string> named_groups ( const Pattern& pattern ) const;
     };
 
 }

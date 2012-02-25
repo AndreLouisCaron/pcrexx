@@ -33,7 +33,7 @@
  */
 
 #include <pcre.h>
-#include <string>
+#include "traits.hpp"
 #include <vector>
 
 namespace pcrexx {
@@ -46,11 +46,15 @@ namespace pcrexx {
 
         /* nested types. */
     public:
-        typedef ::pcre * Handle;
+        typedef wchar_t char_type;
+        typedef /*typename*/ traits<char_type> traits_type;
+
+        typedef /*typename*/ traits_type::handle Handle;
+        typedef /*typename*/ traits_type::string string;
 
         /* data. */
     private:
-        std::string myText;
+        string myText;
         Handle myHandle;
 
         /* construction. */
@@ -58,7 +62,7 @@ namespace pcrexx {
         /*!
          * @brief Compile a regular expression.
          */
-        Pattern ( const std::string& text );
+        Pattern ( const string& text );
         ~Pattern ();
 
         /* methods. */
@@ -68,7 +72,7 @@ namespace pcrexx {
         /*!
          * @brief Regular expression used to compile the pattern.
          */
-        const std::string& text () const;
+        const string& text () const;
 
         /*!
          * @brief Obtain the number of capturing groups in the pattern.
@@ -78,14 +82,14 @@ namespace pcrexx {
         /*!
          * @brief Obtain the index of a group using its name.
          */
-        int group_index ( const std::string& name ) const;
+        int group_index ( const string& name ) const;
 
         /*!
          * @brief Obtain the names of all capturing groups.
          *
          * The name of capturing groups are listed in alphabetical order.
          */
-        std::vector<std::string> group_names () const;
+        std::vector<string> group_names () const;
     };
 
 }

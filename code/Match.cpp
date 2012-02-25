@@ -30,13 +30,13 @@
 
 namespace pcrexx {
 
-    Match::Match ( const Pattern& pattern, const std::string& text )
+    Match::Match ( const Pattern& pattern, const string& text )
         : myText(text),
           myGroups(pattern.capturing_groups()),
           myResults((1+myGroups)*3, 0)
     {
         const int options = 0;
-        const int status = ::pcre_exec
+        const int status = traits_type::execute
             (pattern.handle(), 0, text.data(), text.size(),
              0, options, &myResults[0], myResults.size());
         if (status < 0)
@@ -53,7 +53,7 @@ namespace pcrexx {
         }
     }
 
-    const std::string& Match::text () const
+    const Match::string& Match::text () const
     {
         return (myText);
     }
@@ -78,25 +78,25 @@ namespace pcrexx {
         return (myResults[2*i+1]-myResults[2*i]);
     }
 
-    std::string Match::group () const
+    Match::string Match::group () const
     {
         return (myText.substr(group_base(), group_size()));
     }
 
-    std::string Match::group ( int i ) const
+    Match::string Match::group ( int i ) const
     {
         return (myText.substr(group_base(i), group_size(i)));
     }
 
-    std::map<std::string,std::string>
+    std::map<Match::string,Match::string>
         Match::named_groups ( const Pattern& pattern ) const
     {
-        std::vector<std::string> names = pattern.group_names();
-        std::map<std::string,std::string> groups;
+        std::vector<string> names = pattern.group_names();
+        std::map<string,string> groups;
         for (std::size_t i=0; (i < names.size()); ++i)
         {
-            const std::string& name = names[i];
-            const std::string  data = group(pattern.group_index(name));
+            const string& name = names[i];
+            const string  data = group(pattern.group_index(name));
             groups.insert(std::make_pair(name, data));
         }
         return (groups);

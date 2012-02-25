@@ -29,10 +29,13 @@
 
 namespace {
 
-    const char * name_table ( ::pcre * pattern )
+    pcrexx::Pattern::traits_type::const_char_ptr
+        name_table ( pcrexx::Pattern::Handle pattern )
     {
-        const char * table = 0;
-        const int status = ::pcre_fullinfo
+        typedef pcrexx::Pattern::traits_type traits_type;
+
+        traits_type::const_char_ptr table = 0;
+        const int status = traits_type::query
             (pattern, 0, PCRE_INFO_NAMETABLE, (void*)&table);
         if (status != 0)
         {
@@ -43,10 +46,10 @@ namespace {
         return (table);
     }
 
-    int name_table_stride ( ::pcre * pattern )
+    int name_table_stride ( pcrexx::Pattern::Handle pattern )
     {
         int stride = 0;
-        const int status = ::pcre_fullinfo
+        const int status = pcrexx::Pattern::traits_type::query
             (pattern, 0, PCRE_INFO_NAMEENTRYSIZE, &stride);
         if (status != 0)
         {
@@ -61,14 +64,14 @@ namespace {
 
 namespace pcrexx {
 
-    Pattern::Pattern ( const std::string& text )
+    Pattern::Pattern ( const string& text )
         : myText(text), myHandle(0)
     {
         int error = 0;
         int offset = 0;
         int options = 0;
         const char * help = 0;
-        myHandle = ::pcre_compile2
+        myHandle = traits_type::compile
             (myText.c_str(), options, &error, &help, &offset, 0);
         if (myHandle == 0)
         {
@@ -81,7 +84,7 @@ namespace pcrexx {
 
     Pattern::~Pattern ()
     {
-        ::pcre_free(myHandle);
+        traits_type::release(myHandle);
     }
 
     Pattern::Handle Pattern::handle () const
@@ -89,7 +92,7 @@ namespace pcrexx {
         return (myHandle);
     }
 
-    const std::string& Pattern::text () const
+    const Pattern::string& Pattern::text () const
     {
         return (myText);
     }
@@ -97,7 +100,7 @@ namespace pcrexx {
     int Pattern::capturing_groups () const
     {
         int groups = 0;
-        const int status = ::pcre_fullinfo
+        const int status = traits_type::query
             (myHandle, 0, PCRE_INFO_CAPTURECOUNT, &groups);
         if (status != 0)
         {
@@ -108,27 +111,30 @@ namespace pcrexx {
         return (groups);
     }
 
-    int Pattern::group_index ( const std::string& name ) const
+    int Pattern::group_index ( const string& name ) const
     {
-        const int index = ::pcre_get_stringnumber(myHandle, name.c_str());
+        const int index =
+            traits_type::string_number(myHandle, name.c_str());
         if (index == PCRE_ERROR_NOSUBSTRING)
         {
+#if 0
             std::cerr
                 << "No such group: '" << name << "'!"
                 << std::endl;
+#endif
         }
         return (index);
     }
 
-    std::vector<std::string> Pattern::group_names () const
+    std::vector<Pattern::string> Pattern::group_names () const
     {
         // Access the name table.
-        const char *const table = ::name_table(myHandle);
+        traits_type::const_char_ptr table = ::name_table(myHandle);
         const int stride = ::name_table_stride(myHandle);
         // Scan the table for names.
-        std::vector<std::string> names;
+        std::vector<string> names;
         for (int i=0; (i < capturing_groups()); ++i) {
-            names.push_back(table+(i*stride)+2);
+            names.push_back(table+(i*stride)+traits_type::table_offset());
         }
         return (names);
     }
