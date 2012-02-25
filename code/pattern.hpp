@@ -38,7 +38,7 @@
 
 namespace pcrexx {
 
-    template<typename T>
+    template<class C, class S=typename traits<C>::string>
     class basic_pattern
     {
         // Not copyable.
@@ -47,14 +47,15 @@ namespace pcrexx {
 
         /* nested types. */
     public:
-        typedef T char_type;
+        typedef C char_type;
         typedef typename traits<char_type> traits_type;
 
         typedef typename traits_type::handle handle_type;
-        typedef typename traits_type::string string_type;
+
+        typedef S string_type;
 
     private:
-        typedef basic_pattern<T> self_type;
+        typedef basic_pattern<C,S> self_type;
         typedef typename traits_type::const_char_ptr const_char_ptr;
 
         /* class methods. */
