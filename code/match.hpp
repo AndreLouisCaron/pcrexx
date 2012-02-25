@@ -49,12 +49,12 @@ namespace pcrexx {
 
         /* nested types. */
     public:
-        typedef wchar_t char_type;
-        typedef /*typename*/ traits<char_type> traits_type;
+        typedef T char_type;
+        typedef typename traits<char_type> traits_type;
 
-        typedef /*typename*/ traits_type::string string_type;
+        typedef typename traits_type::string string_type;
 
-        typedef basic_pattern<char_type> pattern_type;
+        typedef typename basic_pattern<char_type> pattern_type;
 
         /* data. */
     private:
