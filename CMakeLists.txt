@@ -53,11 +53,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/code)
 
 # Export libraries.
 set(pcrexx_libraries
-  pcrexx ${pcre_libraries}
+  #pcrexx
+  ${pcre_libraries}
 )
 
 # Compile our own code.
-add_subdirectory(code)
+#add_subdirectory(code)
 
 # When building in standalone mode, build demo projects.
 if(${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME})

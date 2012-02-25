@@ -31,12 +31,12 @@
 int main ( int, char ** )
 try
 {
-    const pcrexx::Pattern pattern(L"hello, (?<greetee>\\w+)!");
+    const pcrexx::wpattern pattern(L"hello, (?<greetee>\\w+)!");
     const std::vector<std::wstring> groups = pattern.group_names();
     for (std::size_t i=0; i < groups.size(); ++i) {
         std::wcout << L"Group: '" << groups[i] << L"'." << std::endl;
     }
-    pcrexx::Match match(pattern, L"hello, world!");
+    pcrexx::wmatch match(pattern, L"hello, world!");
     std::wcout
         << L"Match: '" << match.group() << L"'."
         << std::endl;

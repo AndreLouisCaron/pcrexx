@@ -1,5 +1,5 @@
-#ifndef _pcrexx_Match_hpp__
-#define _pcrexx_Match_hpp__
+#ifndef _pcrexx_match_hpp__
+#define _pcrexx_match_hpp__
 
 // Copyright (c) 2012, Andre Caron (andre.l.caron@gmail.com)
 // All rights reserved.
@@ -34,29 +34,31 @@
 
 #include <pcre.h>
 #include "traits.hpp"
+#include "pattern.hpp"
 #include <map>
 #include <vector>
 
 namespace pcrexx {
 
-    class Pattern;
-
-    class Match
+    template<typename T>
+    class basic_match
     {
         // Not copyable.
-        Match ( const Match& );
-        Match& operator= ( const Match& );
+        basic_match ( const basic_match& );
+        basic_match& operator= ( const basic_match& );
 
         /* nested types. */
     public:
         typedef wchar_t char_type;
         typedef /*typename*/ traits<char_type> traits_type;
 
-        typedef /*typename*/ traits_type::string string;
+        typedef /*typename*/ traits_type::string string_type;
+
+        typedef basic_pattern<char_type> pattern_type;
 
         /* data. */
     private:
-        string myText;
+        string_type myText;
         int myGroups;
         std::vector<int> myResults;
 
@@ -65,49 +67,91 @@ namespace pcrexx {
         /*!
          * @brief Match @a text using @a pattern.
          */
-        Match ( const Pattern& pattern, const string& text );
+        basic_match ( const pattern_type& pattern, const string_type& text )
+            : myText(text),
+              myGroups(pattern.capturing_groups()),
+              myResults((1+myGroups)*3, 0)
+        {
+            const int options = 0;
+            const int status = traits_type::execute
+                (pattern.handle(), 0, text.data(), text.size(),
+                 0, options, &myResults[0], myResults.size());
+            if (status < 0)
+            {
+                std::cerr
+                    << "Failed to match string!"
+                    << std::endl;
+            }
+            if (status == 0)
+            {
+                std::cerr
+                    << "Results vector too small!"
+                    << std::endl;
+            }
+        }
 
         /* methods. */
     public:
         /*!
          * @brief Subject text.
          */
-        const string& text () const;
+        const string_type& text () const
+        {
+            return (myText);
+        }
 
         /*!
          * @brief Get the offset of the entire match.
          */
-        int group_base () const;
+        int group_base () const
+        {
+            return (myResults[0]);
+        }
 
         /*!
          * @brief Get the offset of a specific group within the match.
          */
-        int group_base ( int i ) const;
+        int group_base ( int i ) const
+        {
+            return (myResults[2*i]);
+        }
 
         /*!
          * @brief Get the size of the entire match.
          */
-        int group_size () const;
+        int group_size () const
+        {
+            return (myResults[1]-myResults[0]);
+        }
 
         /*!
          * @brief Get the size a specific group within the match.
          */
-        int group_size ( int i ) const;
+        int group_size ( int i ) const
+        {
+            return (myResults[2*i+1]-myResults[2*i]);
+        }
 
         /*!
          * @brief Get the contents of the entire match.
          */
-        string group () const;
+        string_type group () const
+        {
+            return (myText.substr(group_base(), group_size()));
+        }
 
         /*!
          * @brief Get the contents of a specific group within the match.
          */
-        string group ( int i ) const;
+        string_type group ( int i ) const
+        {
+            return (myText.substr(group_base(i), group_size(i)));
+        }
 
         /*!
          * @brief Get the contents of all captured groups, in order.
          */
-        std::vector<string> groups () const;
+        std::vector<string_type> groups () const;
 
         /*!
          * @brief Get the contents of all captured groups, by name.
@@ -115,9 +159,24 @@ namespace pcrexx {
          * @todo Keep an internal copy of the pattern to implement
          *  this without requiring the client to supply the pattern again.
          */
-        std::map<string,string> named_groups ( const Pattern& pattern ) const;
+        std::map<string_type,string_type>
+            named_groups ( const pattern_type& pattern ) const
+        {
+            std::vector<string_type> names = pattern.group_names();
+            std::map<string_type,string_type> groups;
+            for (std::size_t i=0; (i < names.size()); ++i)
+            {
+                const string_type& name = names[i];
+                const string_type  data = group(pattern.group_index(name));
+                groups.insert(std::make_pair(name, data));
+            }
+            return (groups);
+        }
     };
+
+    typedef basic_match<char> match;
+    typedef basic_match<wchar_t> wmatch;
 
 }
 
-#endif /* _pcrexx_Match_hpp__ */
+#endif /* _pcrexx_match_hpp__ */
