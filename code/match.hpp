@@ -28,7 +28,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /*!
- * @file Match.hpp
+ * @file match.hpp
  * @see http://www.pcre.org/pcre.txt
  */
 
@@ -40,6 +40,21 @@
 
 namespace pcrexx {
 
+    /*!
+     * @brief Regular expression search/match result.
+     * @tparam C Character type.  @c traits<C> must be defined.  By default,
+     *  it is only @c traits<char> and @c traits<wchar_t> are provided.
+     * @tparam S String type.  Must have a default constructor, copy
+     *  constructor, copy-assignment operator and a constructor that accepts
+     *  a C-style null-terminated string with @c C as character type.  It must
+     *  also have a @c c_str() member function that returns a C-style
+     *  null-terminated string.
+     *
+     * Seaach/match results are useful for extrating captured groups from a
+     * matched subject string.
+     *
+     * @note Match objects are immutable and thread-safe.
+     */
     template<class C, class S=typename traits<C>::string>
     class basic_match
     {
@@ -174,7 +189,14 @@ namespace pcrexx {
         }
     };
 
+    /*!
+     * @brief Search/match result for UTF-8 strings stored in @c std::string.
+     */
     typedef basic_match<char> match;
+
+    /*!
+     * @brief Search/match result for UTF-16 strings stored in @c std::wstring.
+     */
     typedef basic_match<wchar_t> wmatch;
 
 }

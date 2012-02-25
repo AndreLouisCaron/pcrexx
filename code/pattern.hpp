@@ -28,7 +28,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /*!
- * @file Pattern.hpp
+ * @file pattern.hpp
  * @see http://www.pcre.org/pcre.txt
  */
 
@@ -38,6 +38,18 @@
 
 namespace pcrexx {
 
+    /*!
+     * @brief Compiled regular expression object.
+     * @tparam C Character type.  @c traits<C> must be defined.  By default,
+     *  it is only @c traits<char> and @c traits<wchar_t> are provided.
+     * @tparam S String type.  Must have a default constructor, copy
+     *  constructor, copy-assignment operator and a constructor that accepts
+     *  a C-style null-terminated string with @c C as character type.  It must
+     *  also have a @c c_str() member function that returns a C-style
+     *  null-terminated string.
+     *
+     * @note Pattern objects are immutable and thread-safe.
+     */
     template<class C, class S=typename traits<C>::string>
     class basic_pattern
     {
@@ -190,7 +202,14 @@ namespace pcrexx {
         }
     };
 
+    /*!
+     * @brief Regular expression for UTF-8 strings stored in @c std::string.
+     */
     typedef basic_pattern<char> pattern;
+
+    /*!
+     * @brief Regular expression for UTF-16 strings stored in @c std::wstring.
+     */
     typedef basic_pattern<wchar_t> wpattern;
 
 }
