@@ -33,6 +33,7 @@
  */
 
 #include <pcre.h>
+#include "exception.hpp"
 #include "traits.hpp"
 #include "pattern.hpp"
 #include <map>
@@ -91,17 +92,8 @@ namespace pcrexx {
             const int status = traits_type::execute
                 (pattern.handle(), 0, text.data(), text.size(),
                  0, options, &myResults[0], myResults.size());
-            if (status < 0)
-            {
-                std::cerr
-                    << "Failed to match string!"
-                    << std::endl;
-            }
-            if (status == 0)
-            {
-                std::cerr
-                    << "Results vector too small!"
-                    << std::endl;
+            if (status < 0) {
+                throw (exception(status, "name_table()"));
             }
         }
 

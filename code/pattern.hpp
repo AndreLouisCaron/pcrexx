@@ -33,6 +33,7 @@
  */
 
 #include <pcre.h>
+#include "exception.hpp"
 #include "traits.hpp"
 #include <vector>
 
@@ -77,11 +78,8 @@ namespace pcrexx {
             const_char_ptr table = 0;
             const int status = traits_type::query
                 (pattern, 0, PCRE_INFO_NAMETABLE, (void*)&table);
-            if (status != 0)
-            {
-                std::cerr
-                    << "Failed to fetch group name table!"
-                    << std::endl;
+            if (status != 0) {
+                throw (exception(status, "name_table()"));
             }
             return (table);
         }
@@ -91,11 +89,8 @@ namespace pcrexx {
             int stride = 0;
             const int status = traits_type::query
                 (pattern, 0, PCRE_INFO_NAMEENTRYSIZE, &stride);
-            if (status != 0)
-            {
-                std::cerr
-                    << "Failed to fetch group name table stride!"
-                    << std::endl;
+            if (status != 0) {
+                throw (exception(status, "name_table_stride()"));
             }
             return (stride);
         }
@@ -119,12 +114,8 @@ namespace pcrexx {
             const char * help = 0;
             myHandle = traits_type::compile
                 (myText.c_str(), options, &error, &help, &offset, 0);
-            if (myHandle == 0)
-            {
-                std::cerr
-                    << "Failed to compile pattern ("
-                    << error << ": '" << ((help==0)?"":help) << "')!"
-                    << std::endl;
+            if (myHandle == 0) {
+                throw (exception(error, help));
             }
         }
 
@@ -156,11 +147,8 @@ namespace pcrexx {
             int groups = 0;
             const int status = traits_type::query
                 (myHandle, 0, PCRE_INFO_CAPTURECOUNT, &groups);
-            if (status != 0)
-            {
-                std::cerr
-                    << "Failed to count groups!"
-                    << std::endl;
+            if (status != 0) {
+                throw (exception(status, "capturing_groups()"));
             }
             return (groups);
         }
@@ -172,13 +160,11 @@ namespace pcrexx {
         {
             const int index =
                 traits_type::string_number(myHandle, name.c_str());
-            if (index == PCRE_ERROR_NOSUBSTRING)
-            {
-#if 0
-                std::cerr
-                    << "No such group: '" << name << "'!"
-                    << std::endl;
-#endif
+            if (index == PCRE_ERROR_NOSUBSTRING) {
+                return (-1);
+            }
+            if (index < 0) {
+                throw (exception(index, "capturing_groups()"));
             }
             return (index);
         }
