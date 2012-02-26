@@ -92,8 +92,12 @@ namespace pcrexx {
             const int status = traits_type::execute
                 (pattern.handle(), 0, text.data(), text.size(),
                  0, options, &myResults[0], myResults.size());
-            if (status < 0) {
-                throw (exception(status, "name_table()"));
+            if (status < 0)
+            {
+                if (status != PCRE_ERROR_NOMATCH) {
+                    throw (exception(status, "name_table()"));
+                }
+                myGroups = 0, myResults.clear();
             }
         }
 
@@ -178,6 +182,13 @@ namespace pcrexx {
                 groups.insert(std::make_pair(name, data));
             }
             return (groups);
+        }
+
+        /* operators. */
+    public:
+        operator bool () const
+        {
+            return (myResults.size() > 0);
         }
     };
 

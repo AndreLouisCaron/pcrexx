@@ -37,14 +37,22 @@ try
         std::wcout << L"Group: '" << groups[i] << L"'." << std::endl;
     }
     pcrexx::wmatch match(pattern, L"hello, world!");
-    std::wcout
-        << L"Match: '" << match.group() << L"'."
-        << std::endl;
-    std::wcout
-        << L"Gretee: '"
-        << match.group(pattern.group_index(L"greetee"))
-        << L"'."
-        << std::endl;
+    if (match)
+    {
+        std::wcout
+            << L"Match: '" << match.group() << L"'."
+            << std::endl;
+        std::wcout
+            << L"Gretee: '"
+            << match.group(pattern.group_index(L"greetee"))
+            << L"'."
+            << std::endl;
+    }
+    else {
+        std::cout
+            << "No match!"
+            << std::endl;
+    }
 }
 catch (const std::exception& error)
 {
