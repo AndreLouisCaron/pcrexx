@@ -34,6 +34,7 @@
 
 #include <pcre.h>
 #include "exception.hpp"
+#include "options.hpp"
 #include "traits.hpp"
 #include <vector>
 
@@ -105,12 +106,12 @@ namespace pcrexx {
         /*!
          * @brief Compile a regular expression.
          */
-        basic_pattern ( const string_type& text )
+        basic_pattern ( const string_type& text,
+                        compile_options options=compile_options() )
             : myText(text), myHandle(0)
         {
             int error = 0;
             int offset = 0;
-            int options = 0;
             const char * help = 0;
             myHandle = traits_type::compile
                 (myText.c_str(), options, &error, &help, &offset, 0);

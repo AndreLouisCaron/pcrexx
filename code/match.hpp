@@ -34,8 +34,9 @@
 
 #include <pcre.h>
 #include "exception.hpp"
-#include "traits.hpp"
+#include "options.hpp"
 #include "pattern.hpp"
+#include "traits.hpp"
 #include <map>
 #include <vector>
 
@@ -83,12 +84,12 @@ namespace pcrexx {
         /*!
          * @brief Match @a text using @a pattern.
          */
-        basic_match ( const pattern_type& pattern, const string_type& text )
+        basic_match ( const pattern_type& pattern, const string_type& text,
+                      runtime_options options=runtime_options() )
             : myText(text),
               myGroups(pattern.capturing_groups()),
               myResults((1+myGroups)*3, 0)
         {
-            const int options = 0;
             const int status = traits_type::execute
                 (pattern.handle(), 0, text.data(), text.size(),
                  0, options, &myResults[0], myResults.size());
