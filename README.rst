@@ -11,9 +11,9 @@ PCRE library.
 
 .. warning::
 
-   This library is in the experimental stage.  Do not use (yet) in production
-   code.  In particular, interfaces are likely to change and not all possible
-   error handling is included.
+   This library is in the experimental stage.  Do not use it in production (at
+   least, not yet).  In particular, interfaces are likely to change and not all
+   possible error handling is included.
 
 .. _`PCRE`: http://www.pcre.org/
 
@@ -24,8 +24,10 @@ This library is a replacement for ``pcrecpp``, the official C++ interface to
 the `PCRE`_ regular expression library.  This replacement was born out of the
 following requirements:
 
-#. Must be BSD-licensed (or compatible)
-#. Must support Unicode (UTF-16 is required, UTF-8 would be a bonus)
+#. Must be BSD-licensed (or compatible).
+#. Must support Unicode (UTF-16 is required, UTF-8 would be a bonus).
+#. Must support custom string types (to deal with legacy code that doesn't use
+   ``std::string`` and ``std::wstring``).
 #. Must offer a separate abstractions for compiled patterns and search/match
    results.  Ideally, the interface should have a similar feel to Python's,
    .NET's or Java's API.
@@ -33,19 +35,19 @@ following requirements:
    for incorrect use that cannot be dectected and/or prevented at compile-time
    (e.g. an invalid regular expression pattern).
 
-Specifically, the original intent is to use this library with native Win32 API
-functions, so direct UTF-16 support through a custom string type (for
-compatibility purposes) is required.
-
 Bonus points are accorded for the following points:
 
-* Built-in CMake_ build scripts (with proper supoprt for configuration through
-  ``find_package()``)
-* Git repository, for use as a Git_ submodule_.
+* Built-in CMake_ build scripts with proper support for configuration through
+  ``find_package()``.
+* Public Git repository (or mirror), for use as a Git_ submodule_.
 
 .. _CMake: http://www.cmake.org/
 .. _Git: http://git-scm.com/
 .. _submodule: http://book.git-scm.com/5_submodules.html
+
+Specifically, the original intent is to use this library with native Win32 API
+functions, so direct UTF-16 support through a custom string type (for
+compatibility purposes) is required.
 
 Other Alternatives
 ------------------
