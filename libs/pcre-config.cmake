@@ -29,17 +29,20 @@ if(NOT pcre_FOUND)
   # Register library targets when found as part of a dependent project.
   # Since this project uses a find_package() directive to include this
   # file, don't recurse back into the CMakeLists file.
-  if(NOT ${PROJECT_NAME} STREQUAL pcre)
-    set(PCRE_STATIC ON)
-    set(PCRE_BUILD_PCRE8 ON)
-    set(PCRE_BUILD_PCRE16 ON)
-    set(PCRE_BUILD_PCRECPP OFF)
-    set(PCRE_SUPPORT_UTF ON)
-    add_subdirectory(
-      ${pcre_DIR}/pcre
-      ${CMAKE_CURRENT_BINARY_DIR}/pcre
-    )
-  endif()
+
+  # Custom PCRE library build options.
+  add_definitions(
+    -DPCRE_STATIC
+  )
+  set(PCRE_STATIC ON)
+  set(PCRE_BUILD_PCRE8 ON)
+  set(PCRE_BUILD_PCRE16 ON)
+  set(PCRE_BUILD_PCRECPP OFF)
+  set(PCRE_SUPPORT_UTF ON)
+  add_subdirectory(
+    ${pcre_DIR}/pcre
+    ${CMAKE_CURRENT_BINARY_DIR}/pcre
+  )
 
   # Locate library headers.
   find_path(pcre_include_dir
@@ -49,10 +52,17 @@ if(NOT pcre_FOUND)
   message(STATUS "PCRE: '${pcre_include_dir}'.")
 
   # Export library targets.
-  set(pcre_libraries
-    pcre pcre16
-    CACHE INTERNAL "PCRE library" FORCE
-  )
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(pcre_libraries
+      pcred pcre16d
+      CACHE INTERNAL "PCRE library" FORCE
+    )
+  else()
+    set(pcre_libraries
+      pcre pcre16
+      CACHE INTERNAL "PCRE library" FORCE
+    )
+  endif()
 
   # Usual "required" et. al. directive logic.
   include(FindPackageHandleStandardArgs)
