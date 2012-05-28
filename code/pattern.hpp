@@ -40,6 +40,8 @@
 
 namespace pcrexx {
 
+    template<class C, class S> class basic_match;
+
     /*!
      * @brief Compiled regular expression object.
      * @tparam C Character type.  @c traits<C> must be defined.  By default,
@@ -187,6 +189,13 @@ namespace pcrexx {
             }
             return (names);
         }
+
+        /* operators. */
+    public:
+        // See "match.hpp".
+        basic_match<C,S> operator() (
+            const string_type& text,
+            runtime_options options=runtime_options()) const;
     };
 
     /*!

@@ -60,10 +60,6 @@ namespace pcrexx {
     template<class C, class S=typename traits<C>::string>
     class basic_match
     {
-        // Not copyable.
-        basic_match ( const basic_match& );
-        basic_match& operator= ( const basic_match& );
-
         /* nested types. */
     public:
         typedef C char_type;
@@ -81,6 +77,12 @@ namespace pcrexx {
 
         /* construction. */
     public:
+        basic_match ()
+            : myText()
+            , myGroups(0)
+            , myResults()
+        {}
+
         /*!
          * @brief Match @a text using @a pattern.
          */
@@ -202,6 +204,14 @@ namespace pcrexx {
      * @brief Search/match result for UTF-16 strings stored in @c std::wstring.
      */
     typedef basic_match<wchar_t> wmatch;
+
+    // pattern(text,options) -> match.
+    template<class C, class S>
+    basic_match<C,S> basic_pattern<C,S>::operator() (
+        const S& text, runtime_options options=runtime_options()) const
+    {
+        return (basic_match<C,S>(*this, text, options));
+    }
 
 }
 
