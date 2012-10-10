@@ -1,6 +1,6 @@
 # Copyright (c) 2012, Andre Caron (andre.l.caron@gmail.com)
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
@@ -34,11 +34,11 @@ if(NOT pcre_FOUND)
   add_definitions(
     -DPCRE_STATIC
   )
-  set(PCRE_STATIC ON)
-  set(PCRE_BUILD_PCRE8 ON)
-  set(PCRE_BUILD_PCRE16 ON)
-  set(PCRE_BUILD_PCRECPP OFF)
-  set(PCRE_SUPPORT_UTF ON)
+  set(PCRE_STATIC ON CACHE STRING "PCRE static")
+  set(PCRE_BUILD_PCRE8 ON CACHE STRING "PCRE8")
+  set(PCRE_BUILD_PCRE16 ON CACHE STRING "PCRE16")
+  set(PCRE_BUILD_PCRECPP OFF CACHE STRING "PCRECPP")
+  set(PCRE_SUPPORT_UTF ON CACHE STRING "PCRE UTF support")
   add_subdirectory(
     ${pcre_DIR}/pcre
     ${CMAKE_CURRENT_BINARY_DIR}/pcre
