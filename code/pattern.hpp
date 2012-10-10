@@ -64,7 +64,7 @@ namespace pcrexx {
         /* nested types. */
     public:
         typedef C char_type;
-        typedef typename traits<char_type> traits_type;
+        typedef traits<char_type> traits_type;
 
         typedef typename traits_type::handle handle_type;
 

@@ -63,11 +63,11 @@ namespace pcrexx {
         /* nested types. */
     public:
         typedef C char_type;
-        typedef typename traits<char_type> traits_type;
+        typedef traits<char_type> traits_type;
 
         typedef S string_type;
 
-        typedef typename basic_pattern<char_type> pattern_type;
+        typedef basic_pattern<char_type> pattern_type;
 
         /* data. */
     private:
@@ -207,8 +207,8 @@ namespace pcrexx {
 
     // pattern(text,options) -> match.
     template<class C, class S>
-    basic_match<C,S> basic_pattern<C,S>::operator() (
-        const S& text, runtime_options options=runtime_options()) const
+    basic_match<C,S> basic_pattern<C,S>::operator()
+        (const S& text, runtime_options options) const
     {
         return (basic_match<C,S>(*this, text, options));
     }
