@@ -51,6 +51,11 @@ if(NOT pcre_FOUND)
   )
   message(STATUS "PCRE: '${pcre_include_dir}'.")
 
+  # Locate library folders.
+  set(pcre_library_dir
+    ${CMAKE_CURRENT_BINARY_DIR}/pcre
+  )
+
   # Export library targets.
   if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(pcre_libraries

@@ -33,6 +33,7 @@ set(pcre_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 find_package(pcre REQUIRED)
 
 include_directories(${pcre_include_dir})
+link_directories(${pcre_library_dir})
 
 if(MSVC)
   # C and C++ runtime libraries are safe to use.
